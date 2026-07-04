@@ -1,0 +1,49 @@
+# Experimental profile for gpt-oss:120b.
+# The profile should only be used after gpt-oss:20b has passed the workflow test.
+# If Ollama reports that more system memory is required, the model failed before the tool began analysis.
+archive:
+  root: "archive"
+  database: "archive/cases.sqlite3"
+  raw_dir: "archive/raw"
+  text_dir: "archive/text"
+  manifest_dir: "archive/manifests"
+  list_dir: "archive/case_lists"
+  report_dir: "reports"
+curia:
+  base_list_url: "https://curia.europa.eu/juris/liste.jsf"
+  default_courts: ["C"]
+  default_languages: ["en"]
+  max_case_number: 900
+  delay_seconds: 1.0
+  wait_ms: 1500
+  min_chars: 600
+  headed: true
+  manual_check: true
+chunking:
+  max_chars: 2200
+  overlap_chars: 250
+  translation_chunk_chars: 2500
+search:
+  fts_limit: 30
+  rerank_limit: 8
+  default_top_cases: 2
+llm:
+  provider: "ollama"
+  ollama_url: "http://localhost:11434"
+  analysis_model: "gpt-oss:120b"
+  translation_model: "translategemma:27b"
+  temperature: 0.1
+  num_ctx: 8192
+  think: "low"
+  keep_alive: "0"
+  timeout_seconds: 1200
+reports:
+  source_chars_per_case: 10000
+  target_words_min: 850
+  target_words_max: 1200
+  max_cases_per_batch: 2
+  include_technical_note: true
+translation:
+  enabled: true
+  chunk_chars: 2500
+  max_languages_per_run: 24

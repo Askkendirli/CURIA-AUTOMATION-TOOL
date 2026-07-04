@@ -1,0 +1,58 @@
+# Safe Windows-first configuration for the legal-linguistic EU case-law prototype.
+# This profile favours reliability over maximum model capacity.
+archive:
+  root: "archive"
+  database: "archive/cases.sqlite3"
+  raw_dir: "archive/raw"
+  text_dir: "archive/text"
+  manifest_dir: "archive/manifests"
+  list_dir: "archive/case_lists"
+  report_dir: "reports"
+
+curia:
+  base_list_url: "https://curia.europa.eu/juris/liste.jsf"
+  default_courts: ["C"]
+  default_languages: ["en"]
+  # The collector probes case numbers from 1 to max_case_number for each year/court.
+  # Full-year collection can be slow; raise this only when the collector runs unattended.
+  max_case_number: 900
+  delay_seconds: 1.0
+  wait_ms: 1500
+  min_chars: 600
+  headed: true
+  manual_check: true
+
+chunking:
+  max_chars: 2200
+  overlap_chars: 250
+  translation_chunk_chars: 2500
+
+search:
+  fts_limit: 30
+  rerank_limit: 8
+  default_top_cases: 2
+
+llm:
+  provider: "ollama"
+  ollama_url: "http://localhost:11434"
+  analysis_model: "gpt-oss:20b"
+  translation_model: "translategemma:27b"
+  temperature: 0.1
+  # 8192 was selected as the practical safe value requested for testing.
+  # It is far below the theoretical 128k context of GPT-OSS and prevents most local timeouts.
+  num_ctx: 8192
+  think: "low"
+  keep_alive: "0"
+  timeout_seconds: 900
+
+reports:
+  source_chars_per_case: 12000
+  target_words_min: 850
+  target_words_max: 1200
+  max_cases_per_batch: 3
+  include_technical_note: true
+
+translation:
+  enabled: true
+  chunk_chars: 2500
+  max_languages_per_run: 24
